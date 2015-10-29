@@ -1,6 +1,6 @@
 //=============================================================================
 // Random Enemies
-// Version: 1.00
+// Version: 1.01
 //=============================================================================
 
 var Imported = Imported || {};
@@ -43,32 +43,33 @@ Game_Troop.prototype.setup = function(troopId) {
     this._enemies = [];
     this.troop().members.forEach(function(member) {
         if ($dataEnemies[member.enemyId]) {
-			var el = Rexal.RE.processEnemyNoteTag($dataEnemies[member.enemyId]);
-			var rand =  Math.randomInt(Math.floor(el.length));
+			var el = [];
+			el = Rexal.RE.processEnemyNoteTag($dataEnemies[member.enemyId]);
+			
             var enemyId = member.enemyId;
 			
 		
             var x = member.x;
             var y = member.y;
-
+var enemy;
 			
 
 
-			if(el.length > 0 && rand!=0)
+			if(el)
 			{
-
-			var enemy = new Game_Enemy(el[rand].id, x, y);
+			var rand =  Math.randomInt(Math.floor(el.length));
+			if(el[rand])enemy = new Game_Enemy(el[rand].id, x, y);
 			
 			}
 			else
 			{
-			var enemy = new Game_Enemy(enemyId, x, y);
+			enemy = new Game_Enemy(enemyId, x, y);
 			}
 			
             if (member.hidden) {
                 enemy.hide();
             }
-            			if(rand != 0)this._enemies.push(enemy);
+            			if(enemy)this._enemies.push(enemy);
 			
         }
     }, this);
@@ -87,7 +88,9 @@ Rexal.RE.processEnemyNoteTag = function(obj) {
 var elist = [];
 Rexal.RE._randomPos = false;
 
+if(obj.note == null)return;
 if(obj == null)return;
+
 		var notedata = obj.note.split(/[\r\n]+/);
 
 		for (var i = 0; i < notedata.length; i++) {
